@@ -33,7 +33,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
-          cache: npm
 
       - name: Install npm package
         run: npm install ${{ env.workingDir }}
