@@ -9,51 +9,58 @@ on:
 
 jobs:
   adf-cicd:
-  runs-on: ubuntu-latest
-  
-  steps:
-    # We'll need to check out the repository so that we can build the ADF ARM Template
-    - name: Checkout
-      uses: actions/checkout@v2
+    runs-on: ubuntu-latest
 
-    - # "Note: the 'AZURE_SP' secret is required to be added into GitHub Secrets. See this blog post for details: "
-    name: Azure Login
-    uses: azure/login@v1
-    with:
-      creds: ${{ secrets.AZURE_CREDENTIALS }}
+    env:
+      workingDir: $(Build.Repository.LocalPath)/azuredatafactory/src
+      serviceConnection: 'Data Factory Demo Service Connection'
+      dataFactoryNameDev: 'adf-cicd-jtf-dev'
+      dataFactoryNameStaging: 'adf-cicd-jtf-staging'
+      dataFactoryNameProd: 'adf-cicd-jtf-prod'
+      resourceGroupName: 'rg-datafactory-demo'
 
-    - name: Setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        cache: npm
+    steps:
+      # We'll need to check out the repository so that we can build the ADF ARM Template
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Install npm package
-      run: npm install ${{ env.workingDir }}
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Validate
-      run: npm run build validate ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
 
-    - name: Generate ARM template
-      run: npm run build export ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} artifacts ${{ env.workingDir }}
+      - name: Install npm package
+        run: npm install ${{ env.workingDir }}
 
-    - name: Copying application artifact
-      run: Copy '${{ env.workingDir }}/artifacts/**' '${{ github.workspace }}/application'
-      
-    - name: Copying CICD ARM Template Parameter Files
-      run: Copy '${{ env.Build.Repository.LocalPath }}/azuredatafactory/cicd-pipeline/*.json' '${{ github.workspace }}/ARMTemplateParameter'
-      
-    - name: Build bicep artifact
-      uses: azure/cli@v1.0.0
-      with:
-        inlineScript: 
-          $file = "${{ github.workspace }}/azuredatafactory/iac/datafactory.bicep"            
-          New-Item -ItemType Directory -Force -Path ${{ github.workspace }}/infrastructure
-          az bicep build --file $file --outdir ${{ github.workspace }}/infrastructure
-        azcliversion: latest
-    
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        path: ${{ github.workspace }}
-        
+      - name: Validate
+        run: npm run build validate ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
+
+      - name: Generate ARM template
+        run: npm run build export ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} artifacts ${{ env.workingDir }}
+
+      - name: Copying application artifact
+        run: Copy '${{ env.workingDir }}/artifacts/**' '${{ github.workspace }}/application'
+
+      - name: Copying CICD ARM Template Parameter Files
+        run: Copy '${{ env.Build.Repository.LocalPath }}/azuredatafactory/cicd-pipeline/*.json' '${{ github.workspace }}/ARMTemplateParameter'
+
+      - name: Build bicep artifact
+        uses: azure/cli@v1.0.0
+        with:
+          inlineScript: 
+            $file = "${{ github.workspace }}/azuredatafactory/iac/datafactory.bicep"            
+            New-Item -ItemType Directory -Force -Path ${{ github.workspace }}/infrastructure
+            az bicep build --file $file --outdir ${{ github.workspace }}/infrastructure
+          azcliversion: latest
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}
+
