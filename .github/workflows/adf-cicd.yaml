@@ -41,7 +41,7 @@ jobs:
         run: ls '${{ github.workspace }}/azuredatafactory/src'
       
       - name: Install npm package
-        run: npm install '${{ github.workspace }}/azuredatafactory/src/package.json'
+        run: npm install '${{ github.workspace }}/azuredatafactory/src/'
 
       - name: Validate
         run: npm run build validate ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
