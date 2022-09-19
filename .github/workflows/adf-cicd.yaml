@@ -33,6 +33,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+          
+      - name: Echo variable contents
+        run: echo 'workingDir = ${{ env.workingDir }}'
 
       - name: Install npm package
         run: npm install ${{ env.workingDir }}
