@@ -38,7 +38,7 @@ jobs:
         run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
           
       - name: Echo GitHub Workspace contents
-        run: ls
+        run: ls '${{ github.workspace }}/azuredatafactory/src'
       
       - name: Install npm package
         run: npm install '${{ github.workspace }}/azuredatafactory/src'
