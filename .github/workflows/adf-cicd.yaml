@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      workingDir: '/azuredatafactory/src'
+      workingDir: '/home/runner/azuredatafactory/src'
       serviceConnection: 'Data Factory Demo Service Connection'
       dataFactoryNameDev: 'adf-cicd-jtf-dev'
       dataFactoryNameStaging: 'adf-cicd-jtf-staging'
