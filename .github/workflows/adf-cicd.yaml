@@ -39,9 +39,9 @@ jobs:
           
       - name: Echo GitHub Workspace contents
         run: ls
-
+      
       - name: Install npm package
-        run: npm install '$GITHUB_WORKSPACE/azuredatafactory/src'
+        run: npm install '${GITHUB_WORKSPACE}/azuredatafactory/src'
 
       - name: Validate
         run: npm run build validate ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
