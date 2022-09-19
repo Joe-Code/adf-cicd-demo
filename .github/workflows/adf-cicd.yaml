@@ -36,6 +36,9 @@ jobs:
           
       - name: Echo variable contents
         run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
+          
+      - name: Echo GitHub Workspace contents
+        run: ls
 
       - name: Install npm package
         run: npm install ${{ env.workingDir }}
