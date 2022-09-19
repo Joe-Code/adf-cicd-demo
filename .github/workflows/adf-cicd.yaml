@@ -35,7 +35,7 @@ jobs:
           node-version: '16.x'
           
       - name: Echo variable contents
-        run: echo 'GitHub WorkSpace = $GITHUB_WORKSPACE'
+        run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
 
       - name: Install npm package
         run: npm install ${{ env.workingDir }}
