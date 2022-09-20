@@ -38,11 +38,14 @@ jobs:
           
       - name: Echo GitHub Workspace data factory contents
         run: ls '${{ github.workspace }}/azuredatafactory/src'
+          
+      - name: Echo GitHub Workspace contents
+        run: ls '${{ github.workspace }}'
       
       - name: Install npm package
         run: npm install '${{ github.workspace }}/azuredatafactory/src'
           
-      - name: Echo GitHub Workspace/azuredatafactory/src contents after npm package installation
+      - name: Echo GitHub Workspace contents after npm package installation
         run: ls '${{ github.workspace }}'
 
       - name: Validate
