@@ -42,11 +42,8 @@ jobs:
       - name: Install npm package
         run: npm install '${{ github.workspace }}/azuredatafactory/src'
           
-      - name: Echo GitHub Workspace/node_modules contents after npm package installation
-        run: ls '${{ github.workspace }}/node_modules'
-          
-      - name: Contents of package.json
-        run: cat '${{ github.workspace }}/package.json'
+      - name: Echo GitHub Workspace/azuredatafactory/src contents after npm package installation
+        run: ls '${{ github.workspace }}/azuredatafactory/src'
 
       - name: Validate
         run: npm run build validate '${{ github.workspace }}/' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
