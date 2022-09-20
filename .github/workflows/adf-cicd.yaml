@@ -13,7 +13,6 @@ jobs:
 
     env:
       workingDir: '/azuredatafactory/src'
-      serviceConnection: 'Data Factory Demo Service Connection'
       dataFactoryNameDev: 'adf-cicd-jtf-dev'
       dataFactoryNameStaging: 'adf-cicd-jtf-staging'
       dataFactoryNameProd: 'adf-cicd-jtf-prod'
