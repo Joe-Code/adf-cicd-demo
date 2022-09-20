@@ -43,10 +43,10 @@ jobs:
         run: npm install '${{ github.workspace }}/azuredatafactory/src'
           
       - name: Echo GitHub Workspace/azuredatafactory/src contents after npm package installation
-        run: ls '${{ github.workspace }}/azuredatafactory/src'
+        run: ls '${{ github.workspace }}'
 
       - name: Validate
-        run: npm run build validate '${{ github.workspace }}/' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
+        run: npm run build validate '${{ github.workspace }}' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
 
       - name: Generate ARM template
         run: npm run build export '${{ github.workspace }}' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
