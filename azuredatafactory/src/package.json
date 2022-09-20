@@ -4,5 +4,11 @@
     },
     "dependencies": {
         "@microsoft/azure-data-factory-utilities": "^0.1.3"
-    }
+    },
+  "name": "@microsoft/azure-data-factory-utilities",
+  "description": "Read me file.",
+  "version": "0.1.3",
+  "main": "",
+  "author": "",
+  "license": ""    
 }
