@@ -36,14 +36,14 @@ jobs:
       - name: Echo variable contents
         run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
           
-      - name: Echo GitHub Workspace contents
+      - name: Echo GitHub Workspace data factory contents
         run: ls '${{ github.workspace }}/azuredatafactory/src'
       
       - name: Install npm package
         run: npm install '${{ github.workspace }}/azuredatafactory/src'
           
       - name: Echo GitHub Workspace contents after npm package installation
-        run: ls '${{ github.workspace }}/azuredatafactory/src'
+        run: ls '${{ github.workspace }}'
 
       - name: Validate
         run: npm run build validate '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
