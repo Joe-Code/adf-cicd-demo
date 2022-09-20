@@ -44,6 +44,9 @@ jobs:
           
       - name: Echo GitHub Workspace contents after npm package installation
         run: ls '${{ github.workspace }}'
+          
+      - name: Contents of package.json
+        run: cat '${{ github.workspace }}/package.json'
 
       - name: Validate
         run: npm run build validate '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
