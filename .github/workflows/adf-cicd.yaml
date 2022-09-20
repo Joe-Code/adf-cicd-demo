@@ -41,13 +41,13 @@ jobs:
         run: ls '${{ github.workspace }}/azuredatafactory/src'
       
       - name: Install npm package
-        run: npm install '${{ github.workspace }}/azuredatafactory/src/package.json'
+        run: npm install '${{ github.workspace }}/azuredatafactory/src'
 
       - name: Validate
-        run: npm run build validate ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
+        run: npm run build validate '${{ github.workspace }}/azuredatafactory/src' /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
 
       - name: Generate ARM template
-        run: npm run build export ${{ env.workingDir }} /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} artifacts ${{ env.workingDir }}
+        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} artifacts ${{ env.workingDir }}
 
       - name: Copying application artifact
         run: Copy '${{ env.workingDir }}/artifacts/**' '${{ github.workspace }}/application'
