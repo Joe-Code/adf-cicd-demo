@@ -44,10 +44,10 @@ jobs:
         run: npm install '${{ github.workspace }}/azuredatafactory/src'
 
       - name: Validate
-        run: npm run build validate '${{ github.workspace }}/azuredatafactory/src' /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
+        run: npm run build validate '${{ github.workspace }}/azuredatafactory/src' /subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} ${{ env.workingDir }}
 
       - name: Generate ARM template
-        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} artifacts ${{ env.workingDir }}
+        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' /subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} artifacts ${{ env.workingDir }}
 
       - name: Copying application artifact
         run: Copy '${{ github.workspace }}/artifacts/**' '${{ github.workspace }}/application'
