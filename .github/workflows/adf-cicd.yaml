@@ -50,19 +50,19 @@ jobs:
         run: npm run build export '${{ github.workspace }}/azuredatafactory/src' /subscriptions/${{ env.subscriptionId }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }} artifacts ${{ env.workingDir }}
 
       - name: Copying application artifact
-        run: Copy '${{ env.workingDir }}/artifacts/**' '${{ github.workspace }}/application'
+        run: Copy '${{ github.workspace }}/artifacts/**' '${{ github.workspace }}/application'
 
       - name: Copying CICD ARM Template Parameter Files
-        run: Copy '${{ env.Build.Repository.LocalPath }}/azuredatafactory/cicd-pipeline/*.json' '${{ github.workspace }}/ARMTemplateParameter'
+        run: Copy '${{ github.workspace }}/azuredatafactory/cicd-pipeline/*.json' '${{ github.workspace }}/ARMTemplateParameter'
 
-      - name: Build bicep artifact
-        uses: azure/cli@v1.0.0
-        with:
-          inlineScript: 
-            $file = "${{ github.workspace }}/azuredatafactory/iac/datafactory.bicep"            
-            New-Item -ItemType Directory -Force -Path ${{ github.workspace }}/infrastructure
-            az bicep build --file $file --outdir ${{ github.workspace }}/infrastructure
-          azcliversion: latest
+#      - name: Build bicep artifact
+#        uses: azure/cli@v1.0.0
+#        with:
+#          inlineScript: 
+#            $file = "${{ github.workspace }}/azuredatafactory/iac/datafactory.bicep"            
+#            New-Item -ItemType Directory -Force -Path ${{ github.workspace }}/infrastructure
+#            az bicep build --file $file --outdir ${{ github.workspace }}/infrastructure
+#          azcliversion: latest
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
