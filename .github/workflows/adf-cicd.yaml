@@ -58,7 +58,10 @@ jobs:
 #        run: Copy '${{ github.workspace }}/artifacts/**' '${{ github.workspace }}/application'
 
       - name: Copying CICD ARM Template Parameter Files
-        run: cp -a '${{ github.workspace }}/azuredatafactory/cicd-parameters/.' '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
+        run: cp -a '${{ github.workspace }}/azuredatafactory/cicd-parameters/.' '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput/'
+          
+      - name: Echo ARMTemplateOutput contents
+        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
 
 #      - name: Build bicep artifact
 #        uses: azure/cli@v1.0.0
