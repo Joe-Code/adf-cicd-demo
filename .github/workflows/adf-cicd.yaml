@@ -76,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: datafactory
-          path: '${{ github.workspace }}/azuredatafactory/src/ArmTemplateOutput'
+          path: '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
           if-no-files-found: warn
 
 
