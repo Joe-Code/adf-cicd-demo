@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "factoryName": {
+            "value": "adf-cicd-jtf-staging"
+        },
+        "AzureStorageLinkedService_connectionString": {
+            "value": "DefaultEndpointsProtocol=https;AccountName=stadfdemostaging;EndpointSuffix=core.windows.net;"
+        },
+        "AzureKeyVaultLinkedService_properties_typeProperties_baseUrl": {
+            "value": "https://kv-adf-jtf-demo-staging.vault.azure.net/"
+        }
+    }
+}
