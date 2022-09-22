@@ -49,16 +49,16 @@ jobs:
       - name: Validate
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
         run: npm run build validate '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
-
+        
       - name: Generate ARM template
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
         run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' 'ArmTemplateOutput'
 
-#      - name: Copying application artifact
-#        run: Copy '${{ github.workspace }}/artifacts/**' '${{ github.workspace }}/application'
+      - name: Echo ARMTemplateOutput contents after ARM Template generation
+        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
 
       - name: Copying CICD ARM Template Parameter Files
-        run: cp -a '${{ github.workspace }}/azuredatafactory/cicd-parameters/.' '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput/'
+        run: cp -a '${{ github.workspace }}/azuredatafactory/cicd-parameters/.' '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
           
       - name: Echo ARMTemplateOutput contents
         run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
