@@ -7,17 +7,16 @@ on:
 #      - main
 #  pull_request:
 
+env:
+  workingDir: '/azuredatafactory/src'
+  dataFactoryNameDev: 'adf-cicd-jtf-dev'
+  dataFactoryNameStaging: 'adf-cicd-jtf-staging'
+  dataFactoryNameProd: 'adf-cicd-jtf-prod'
+  resourceGroupName: 'rg-datafactory-demo'
+
 jobs:
-  adf-cicd:
+  build-adf-arm-templates:
     runs-on: ubuntu-latest
-
-    env:
-      workingDir: '/azuredatafactory/src'
-      dataFactoryNameDev: 'adf-cicd-jtf-dev'
-      dataFactoryNameStaging: 'adf-cicd-jtf-staging'
-      dataFactoryNameProd: 'adf-cicd-jtf-prod'
-      resourceGroupName: 'rg-datafactory-demo'
-
     steps:
       # We'll need to check out the repository so that we can build the ADF ARM Template
       - name: Checkout
@@ -33,14 +32,14 @@ jobs:
         with:
           node-version: '18.x'
           
-      - name: Echo variable contents
-        run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
+#      - name: Echo variable contents
+#        run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
           
-      - name: Echo GitHub Workspace data factory contents
-        run: ls '${{ github.workspace }}/azuredatafactory/src'
+#      - name: Echo GitHub Workspace data factory contents
+#        run: ls '${{ github.workspace }}/azuredatafactory/src'
           
-      - name: Echo GitHub Workspace contents
-        run: ls '${{ github.workspace }}'
+#      - name: Echo GitHub Workspace contents
+#        run: ls '${{ github.workspace }}'
       
       - name: Install npm package
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
@@ -54,23 +53,14 @@ jobs:
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
         run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' 'ARMTemplateOutput'
 
-      - name: Echo ARMTemplateOutput contents after ARM Template generation
-        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
+#      - name: Echo ARMTemplateOutput contents after ARM Template generation
+#        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
 
       - name: Copying CICD ARM Template Parameter Files
         run: cp -a '${{ github.workspace }}/azuredatafactory/cicd-parameters/.' '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
           
-      - name: Echo ARMTemplateOutput contents
-        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
-
-#      - name: Build bicep artifact
-#        uses: azure/cli@v1.0.0
-#        with:
-#          inlineScript: 
-#            $file = "${{ github.workspace }}/azuredatafactory/iac/datafactory.bicep"            
-#            New-Item -ItemType Directory -Force -Path ${{ github.workspace }}/infrastructure
-#            az bicep build --file $file --outdir ${{ github.workspace }}/infrastructure
-#          azcliversion: latest
+#      - name: Echo ARMTemplateOutput contents
+#        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -79,4 +69,32 @@ jobs:
           path: '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
           if-no-files-found: warn
 
+  deploy-adf-development:
+    runs-on: ubuntu-latest
+    steps:
+      # We'll need to check out the repository so that we can build the ADF ARM Template
+      - name: Checkout
+        uses: actions/checkout@v2
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+          
+      - name: Echo variable contents
+        run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
+       
+      - name: Echo GitHub Workspace contents
+        run: ls '${{ github.workspace }}'
+
+#      - name: Deploy resources
+#        uses: Azure/data-factory-deploy-action@v1.2.0
+#        with:
+#          resourceGroupName: $resourceGroupName
+#          dataFactoryName: $dataFactoryNameDev
+#          armTemplateFile: myArmTemplate.json
+          # armTemplateParametersFile: myArmTemplateParameters.json [optional]
+          # additionalParameters: 'key1=value key2=value keyN=value' [optional]
+          # skipAzModuleInstallation: true [optional]
+    
