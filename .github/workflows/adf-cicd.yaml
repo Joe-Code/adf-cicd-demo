@@ -89,7 +89,10 @@ jobs:
 #        run: ls '${{ github.workspace//env.workingDir }}'
         
       - name: Echo contents
-        run: ${{ format('{0}/{1}', github.workspace, env.workingDir) }}
+        run: ls ${{ format('{0}/{1}', github.workspace, env.workingDir) }}
+        
+      - name: Echo contents
+        run: ls ${{ format('{0}/{1}/{2}', github.workspace, env.workingDir, 'azuredatafactory/src') }}
 
 #      - name: Deploy resources
 #        uses: Azure/data-factory-deploy-action@v1.2.0
