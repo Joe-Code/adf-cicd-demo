@@ -85,8 +85,11 @@ jobs:
       - name: Echo variable contents
         run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
        
-      - name: Echo GitHub Workspace contents
-        run: ls '${{ github.workspace//env.workingDir }}'
+#      - name: Echo GitHub Workspace contents
+#        run: ls '${{ github.workspace//env.workingDir }}'
+        
+      - name: Echo contents
+        run: ${{ format('{0}/{1}', github.workspace, env.workingDir) }}
 
 #      - name: Deploy resources
 #        uses: Azure/data-factory-deploy-action@v1.2.0
