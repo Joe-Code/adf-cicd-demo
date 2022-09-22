@@ -52,7 +52,7 @@ jobs:
 
       - name: Generate ARM template
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
-        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' 'ArmTemplateOutput'
+        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' '${{ github.workspace }}/ArmTemplateOutput'
 
 #      - name: Copying application artifact
 #        run: Copy '${{ github.workspace }}/artifacts/**' '${{ github.workspace }}/application'
@@ -72,5 +72,8 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: ${{ github.workspace }}
+          name: webapp
+          path: ${{ github.workspace }}/ArmTemplateOutput
+          if-no-files-found: warn
+
 
