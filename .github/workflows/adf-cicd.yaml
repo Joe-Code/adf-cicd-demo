@@ -93,13 +93,13 @@ jobs:
 #      - name: Echo contents
 #        run: ls ${{ format('{0}{1}', github.workspace, env.workingDirARMParameters) }}
 
-#      - name: Deploy resources
-#        uses: Azure/data-factory-deploy-action@v1.2.0
-#        with:
-#          resourceGroupName: $resourceGroupName
-#          dataFactoryName: $dataFactoryNameDev
-#          armTemplateFile: myArmTemplate.json
-          # armTemplateParametersFile: myArmTemplateParameters.json [optional]
+      - name: Deploy resources
+        uses: Azure/data-factory-deploy-action@v1.2.0
+        with:
+          resourceGroupName: ${{ env.resourceGroupName }}
+          dataFactoryName: ${{ env.dataFactoryNameDev }}
+          armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
+          armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Development.json') }}
           # additionalParameters: 'key1=value key2=value keyN=value' [optional]
           # skipAzModuleInstallation: true [optional]
     
