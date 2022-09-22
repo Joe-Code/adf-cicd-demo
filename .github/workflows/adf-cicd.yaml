@@ -52,7 +52,7 @@ jobs:
         
       - name: Generate ARM template
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
-        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' 'ArmTemplateOutput'
+        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' 'ARMTemplateOutput'
 
       - name: Echo ARMTemplateOutput contents after ARM Template generation
         run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
