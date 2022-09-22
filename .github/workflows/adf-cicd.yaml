@@ -45,9 +45,6 @@ jobs:
       - name: Install npm package
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
         run: npm install
-          
-      - name: Echo GitHub Workspace contents after npm package installation
-        run: ls '${{ github.workspace }}'
 
       - name: Validate
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
@@ -55,7 +52,7 @@ jobs:
 
       - name: Generate ARM template
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
-        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}'
+        run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' 'ArmTemplateOutput'
 
 #      - name: Copying application artifact
 #        run: Copy '${{ github.workspace }}/artifacts/**' '${{ github.workspace }}/application'
