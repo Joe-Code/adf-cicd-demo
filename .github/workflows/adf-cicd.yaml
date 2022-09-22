@@ -9,6 +9,7 @@ on:
 
 env:
   workingDir: '/azuredatafactory/src'
+  workingDirARMParameters: '/azuredatafactory/'
   dataFactoryNameDev: 'adf-cicd-jtf-dev'
   dataFactoryNameStaging: 'adf-cicd-jtf-staging'
   dataFactoryNameProd: 'adf-cicd-jtf-prod'
@@ -71,25 +72,26 @@ jobs:
 
   deploy-adf-development:
     runs-on: ubuntu-latest
-    steps:
-      # We'll need to check out the repository so that we can build the ADF ARM Template
-      - name: Checkout
-        uses: actions/checkout@v2
-
+    steps:    
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           enable-AzPSSession: true
           
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: datafactory
+
       - name: Echo variable contents
         run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
        
-#      - name: Echo GitHub Workspace contents
-#        run: ls '${{ github.workspace//env.workingDir }}'
+      - name: Echo GitHub Workspace contents
+        run: ls '${{ github.workspace }}'
         
-      - name: Echo contents
-        run: ls ${{ format('{0}{1}', github.workspace, env.workingDir) }}
+#      - name: Echo contents
+#        run: ls ${{ format('{0}{1}', github.workspace, env.workingDirARMParameters) }}
 
 #      - name: Deploy resources
 #        uses: Azure/data-factory-deploy-action@v1.2.0
