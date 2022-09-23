@@ -54,6 +54,14 @@ jobs:
           path: '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
           if-no-files-found: warn
 
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az logout
+            az cache purge
+            az account clear
+
   deploy-adf-development:
     runs-on: ubuntu-latest
     needs: build-adf-arm-templates
@@ -77,6 +85,14 @@ jobs:
           dataFactoryName: ${{ env.dataFactoryNameDev }}
           armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
           armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Development.json') }}
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az logout
+            az cache purge
+            az account clear
 
   deploy-adf-staging:
     runs-on: ubuntu-latest
@@ -102,6 +118,14 @@ jobs:
           armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
           armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Staging.json') }}
 
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az logout
+            az cache purge
+            az account clear
+
   deploy-adf-production:
     runs-on: ubuntu-latest
     needs: deploy-adf-staging
@@ -125,3 +149,11 @@ jobs:
           dataFactoryName: ${{ env.dataFactoryNameProd }}
           armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
           armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Prod.json') }}
+
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az logout
+            az cache purge
+            az account clear
