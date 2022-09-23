@@ -19,7 +19,6 @@ jobs:
   build-adf-arm-templates:
     runs-on: ubuntu-latest
     steps:
-      # We'll need to check out the repository so that we can build the ADF ARM Template
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -32,16 +31,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '18.x'
-          
-#      - name: Echo variable contents
-#        run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
-          
-#      - name: Echo GitHub Workspace data factory contents
-#        run: ls '${{ github.workspace }}/azuredatafactory/src'
-          
-#      - name: Echo GitHub Workspace contents
-#        run: ls '${{ github.workspace }}'
-      
+    
       - name: Install npm package
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
         run: npm install
@@ -54,14 +44,8 @@ jobs:
         working-directory: '${{ github.workspace }}/azuredatafactory/src'
         run: npm run build export '${{ github.workspace }}/azuredatafactory/src' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/${{ env.dataFactoryNameDev }}' 'ARMTemplateOutput'
 
-#      - name: Echo ARMTemplateOutput contents after ARM Template generation
-#        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
-
       - name: Copying CICD ARM Template Parameter Files
         run: cp -a '${{ github.workspace }}/azuredatafactory/cicd-parameters/.' '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
-          
-#      - name: Echo ARMTemplateOutput contents
-#        run: ls '${{ github.workspace }}/azuredatafactory/src/ARMTemplateOutput'
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
@@ -73,6 +57,7 @@ jobs:
   deploy-adf-development:
     runs-on: ubuntu-latest
     needs: build-adf-arm-templates
+    environment: development
     steps:    
       - name: Azure Login
         uses: azure/login@v1
@@ -85,15 +70,6 @@ jobs:
         with:
           name: datafactory
 
-      - name: Echo variable contents
-        run: echo "GitHub WorkSpace = $GITHUB_WORKSPACE"
-       
-      - name: Echo GitHub Workspace contents
-        run: ls '${{ github.workspace }}'
-        
-#      - name: Echo contents
-#        run: ls ${{ format('{0}{1}', github.workspace, env.workingDirARMParameters) }}
-
       - name: Deploy resources
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
@@ -101,6 +77,51 @@ jobs:
           dataFactoryName: ${{ env.dataFactoryNameDev }}
           armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
           armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Development.json') }}
-          # additionalParameters: 'key1=value key2=value keyN=value' [optional]
-          # skipAzModuleInstallation: true [optional]
-    
+
+  deploy-adf-staging:
+    runs-on: ubuntu-latest
+    needs: deploy-adf-development
+    environment: staging
+    steps:    
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+          
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: datafactory
+
+      - name: Deploy resources
+        uses: Azure/data-factory-deploy-action@v1.2.0
+        with:
+          resourceGroupName: ${{ env.resourceGroupName }}
+          dataFactoryName: ${{ env.dataFactoryNameStaging }}
+          armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
+          armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Staging.json') }}
+
+  deploy-adf-production:
+    runs-on: ubuntu-latest
+    needs: deploy-adf-development
+    environment: production
+    steps:    
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+          
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: datafactory
+
+      - name: Deploy resources
+        uses: Azure/data-factory-deploy-action@v1.2.0
+        with:
+          resourceGroupName: ${{ env.resourceGroupName }}
+          dataFactoryName: ${{ env.dataFactoryNameProd }}
+          armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
+          armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Prod.json') }}
