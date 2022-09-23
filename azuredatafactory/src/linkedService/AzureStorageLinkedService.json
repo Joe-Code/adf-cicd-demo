@@ -1,7 +1,12 @@
 {
 	"name": "AzureStorageLinkedService",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"parameters": {
+			"storageaccountsecretname": {
+				"type": "String",
+				"defaultValue": "storageaccount-adf-demo"
+			}
+		},
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
@@ -12,8 +17,12 @@
 					"referenceName": "AzureKeyVaultLinkedService",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "storageaccount-adf-demo"
+				"secretName": {
+					"value": "@linkedService().storageaccountsecretname",
+					"type": "Expression"
+				}
 			}
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
