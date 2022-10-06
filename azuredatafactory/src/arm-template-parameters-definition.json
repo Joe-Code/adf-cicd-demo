@@ -6,7 +6,7 @@
             "value": "adf-cicd-jtf-dev"
         },
         "AzureStorageLinkedService_connectionString": {
-            "value": ""
+            "value": "DefaultEndpointsProtocol=https;AccountName=stadfdemodev;EndpointSuffix=core.windows.net;"
         },
         "AzureKeyVaultLinkedService_properties_typeProperties_baseUrl": {
             "value": "https://kv-adf-jtf-demo-dev.vault.azure.net/"
