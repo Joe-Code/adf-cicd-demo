@@ -5,9 +5,6 @@
         "factoryName": {
             "value": "adf-cicd-jtf-prod"
         },
-        "AzureStorageLinkedService_connectionString": {
-            "value": "DefaultEndpointsProtocol=https;AccountName=stadfdemoprod;EndpointSuffix=core.windows.net;"
-        },
         "AzureKeyVaultLinkedService_properties_typeProperties_baseUrl": {
             "value": "https://kv-adf-jtf-demo-prod.vault.azure.net/"
         }
