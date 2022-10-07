@@ -10,7 +10,7 @@
         "AzureKeyVault": {
             "properties": {
                 "typeProperties": {
-                    "baseUrl": "-::string"
+                    "baseUrl": "-:baseUrl:string"
                 }
             }
         }
