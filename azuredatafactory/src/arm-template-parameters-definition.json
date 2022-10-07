@@ -3,14 +3,14 @@
         "AzureStorage": {
             "properties": {
                 "typeProperties": {
-                    "connectionString": "-::string"
+                    "connectionString": "=:connectionString:string"
                 }
             }
         },
         "AzureKeyVault": {
             "properties": {
                 "typeProperties": {
-                    "baseUrl": "-:baseUrl:string"
+                    "baseUrl": "=:baseUrl:string"
                 }
             }
         }
