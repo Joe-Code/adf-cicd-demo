@@ -1,12 +1,5 @@
 {
     "Microsoft.DataFactory/factories/linkedServices": {
-        "AzureStorage": {
-            "properties": {
-                "typeProperties": {
-                    "connectionString": "=:connectionString:string"
-                }
-            }
-        },
         "AzureKeyVault": {
             "properties": {
                 "typeProperties": {
