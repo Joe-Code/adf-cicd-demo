@@ -1,12 +1,10 @@
 {
 	"name": "AzureStorageLinkedService",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
-			"connectionString": "DefaultEndpointsProtocol=https;AccountName=stadfdemodev;EndpointSuffix=core.windows.net;",
-			"accountKey": {
+			"connectionString": {
 				"type": "AzureKeyVaultSecret",
 				"store": {
 					"referenceName": "AzureKeyVaultLinkedService",
@@ -15,5 +13,6 @@
 				"secretName": "storageaccount-adf-demo"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
