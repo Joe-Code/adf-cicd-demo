@@ -1,0 +1,234 @@
+trigger: none
+#  branches:
+#    include:
+#    - main
+#  paths:
+#    include:
+#    - azuredatafactory
+    
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  workingDir: $(Build.Repository.LocalPath)/azuredatafactory/src
+  serviceConnection: ''
+  dataFactoryNameDev: ''
+  dataFactoryNameStaging: ''
+  dataFactoryNameProd: ''
+  resourceGroupName: ''
+
+stages:
+  - stage: build
+    displayName: 'Build Artifacts'
+    jobs:
+      - job:
+        steps:
+        # configuring node
+        - task: NodeTool@0
+          inputs:
+            versionSpec: '10.x'
+          displayName: 'Install Node.js'
+
+        - task: Npm@1
+          inputs:
+            command: 'install'
+            verbose: true
+            workingDir: '$(workingDir)'
+          displayName: 'Install npm package'
+
+        # validating artifacts
+        - task: Npm@1
+          inputs:
+            command: 'custom'
+            customCommand: 'run build validate $(workingDir) /subscriptions/$(subscriptionId)/resourceGroups/$(resourceGroupName)/providers/Microsoft.DataFactory/factories/$(dataFactoryNameDev)'
+            workingDir: '$(workingDir)'
+          displayName: 'Validate'
+
+        # generating ARM Templates from source code
+        - task: Npm@1
+          inputs:
+            command: 'custom'
+            customCommand: 'run build export $(workingDir) /subscriptions/$(subscriptionId)/resourceGroups/$(resourceGroupName)/providers/Microsoft.DataFactory/factories/$(dataFactoryNameDev) artifacts'
+            workingDir: '$(workingDir)'
+          displayName: 'Generate ARM template'
+
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(workingDir)/artifacts'
+            Contents: '**'
+            TargetFolder: '$(build.artifactstagingdirectory)/application' 
+          displayName: 'Copying application artifact'
+
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: '$(Build.Repository.LocalPath)/azuredatafactory/cicd-pipeline'
+            Contents: '*.json'
+            TargetFolder: '$(build.artifactstagingdirectory)/ARMTemplateParameter' 
+          displayName: 'Copying CICD ARM Template Parameter Files'
+
+        # building bicep into ARM
+        - task: AzureCLI@2  
+          displayName: 'Build bicep artifact' 
+          inputs: 
+            azureSubscription: $(serviceConnection)
+            scriptType: 'pscore'  
+            scriptLocation: 'inlineScript'  
+            inlineScript: |
+              $file = "$(Build.SourcesDirectory)/azuredatafactory/iac/datafactory.bicep"            
+              New-Item -ItemType Directory -Force -Path $(build.artifactstagingdirectory)/infrastructure
+              az bicep build --file $file --outdir $(build.artifactstagingdirectory)/infrastructure
+
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: '$(build.artifactstagingdirectory)'
+            artifact: 'datafactory'
+            publishLocation: 'pipeline'
+
+  - stage: 'development'
+    displayName: 'Development deploy'
+    dependsOn: build
+    variables:
+      dataFactoryName: $(dataFactoryNameDev)
+    jobs: 
+    - deployment: DeployToDevelopment
+      pool:
+        vmImage: 'windows-latest'
+      environment: development 
+      strategy:
+        runOnce:
+          preDeploy:
+            steps:
+              - task: DownloadPipelineArtifact@2 #downloading artifacts created in build stage
+                inputs:
+                  source: 'current'
+                  path: '$(Pipeline.Workspace)'
+
+              - task: AzureResourceManagerTemplateDeployment@3
+                displayName: Creating ADF Infrastructure by IaC
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: '$(serviceConnection)'
+                  subscriptionId: '$(subscriptionId)'
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: '$(resourceGroupName)'
+                  location: 'eastus'
+                  templateLocation: 'Linked artifact'
+                  csmFile: '$(Pipeline.Workspace)\datafactory\infrastructure\datafactory.json'
+                  overrideParameters: -dataFactoryName $(dataFactoryNameDev) -environment development
+                  deploymentMode: 'Incremental'
+                  deploymentOutputs: 'ArmOutputs'
+          deploy:
+            steps:
+              - task: AzureResourceManagerTemplateDeployment@3
+                displayName: 'Deploying ADF Artificats'
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: $(serviceConnection)
+                  subscriptionId: $(subscriptionId)
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: '$(resourceGroupName)'
+                  location: 'eastus'
+                  templateLocation: 'Linked artifact'
+                  csmFile: '$(Pipeline.Workspace)/datafactory/application/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateParameter/ARMTemplateParametersFactory-Development.json'
+                  deploymentMode: 'Incremental'
+
+  - stage: 'staging'
+    displayName: 'Staging deploy'
+    dependsOn: development
+    variables:
+      dataFactoryName: $(dataFactoryNameStaging)
+    jobs: 
+    - deployment: DeployToStaging
+      pool:
+        vmImage: 'windows-latest'
+      environment: staging 
+      strategy:
+        runOnce:
+          preDeploy:
+            steps:
+              - task: DownloadPipelineArtifact@2 #downloading artifacts created in build stage
+                inputs:
+                  source: 'current'
+                  path: '$(Pipeline.Workspace)'
+
+              - task: AzureResourceManagerTemplateDeployment@3
+                displayName: Creating ADF Infrastructure by IaC
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: '$(serviceConnection)'
+                  subscriptionId: '$(subscriptionId)'
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: '$(resourceGroupName)'
+                  location: 'eastus'
+                  templateLocation: 'Linked artifact'
+                  csmFile: '$(Pipeline.Workspace)\datafactory\infrastructure\datafactory.json'
+                  overrideParameters: '-dataFactoryName $(dataFactoryNameStaging)'
+                  deploymentMode: 'Incremental'
+                  deploymentOutputs: 'ArmOutputs'
+
+          deploy:
+            steps:
+              - task: AzureResourceManagerTemplateDeployment@3
+                displayName: 'Deploying ADF Artificats'
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: $(serviceConnection)
+                  subscriptionId: $(subscriptionId)
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: '$(resourceGroupName)'
+                  location: 'eastus'
+                  templateLocation: 'Linked artifact'
+                  csmFile: '$(Pipeline.Workspace)/datafactory/application/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateParameter/ARMTemplateParametersFactory-Staging.json'
+                  deploymentMode: 'Incremental'
+
+  - stage: prod
+    displayName: Production deploy
+    dependsOn: staging
+    variables:
+      dataFactoryName: $(dataFactoryNameProd)
+    jobs: 
+    - deployment: DeployToProd
+      pool:
+        vmImage: windows-latest
+      environment: production
+      strategy:
+        runOnce:
+          preDeploy:
+            steps:
+              - task: DownloadPipelineArtifact@2 #downloading artifacts created in build stage
+                inputs:
+                  source: 'current'
+                  path: '$(Pipeline.Workspace)'
+
+              - task: AzureResourceManagerTemplateDeployment@3
+                displayName: Creating ADF Infrastructure by IaC
+                inputs:
+                  deploymentScope: "Resource Group"
+                  azureResourceManagerConnection: $(serviceConnection)
+                  subscriptionId: $(subscriptionId)
+                  action: "Create Or Update Resource Group"
+                  resourceGroupName: '$(resourceGroupName)'
+                  location: "eastus"
+                  templateLocation: "Linked artifact"
+                  csmFile: '$(Pipeline.Workspace)\datafactory\infrastructure\datafactory.json'
+                  deploymentMode: "Incremental"
+                  deploymentOutputs: "ArmOutputs"
+                  overrideParameters: -dataFactoryName $(dataFactoryNameProd)
+
+          deploy:
+            steps:
+              - task: AzureResourceManagerTemplateDeployment@3
+                displayName: 'Deploying ADF Artificats'
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: $(serviceConnection)
+                  subscriptionId: $(subscriptionId)
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: '$(resourceGroupName)'
+                  location: 'eastus'
+                  templateLocation: 'Linked artifact'
+                  csmFile: '$(Pipeline.Workspace)/datafactory/application/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateParameter/ARMTemplateParametersFactory-Prod.json'
+                  deploymentMode: 'Incremental'
