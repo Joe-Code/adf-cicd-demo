@@ -1,18 +1,18 @@
 {
-	"name": "AzureStorageLinkedService",
+	"name": "LS_ABLB_Storage_Demo",
 	"properties": {
+		"description": "Linked service with access to the storage account that will move files from the input folder to the output folder.",
 		"annotations": [],
 		"type": "AzureBlobStorage",
 		"typeProperties": {
 			"connectionString": {
 				"type": "AzureKeyVaultSecret",
 				"store": {
-					"referenceName": "AzureKeyVaultLinkedService",
+					"referenceName": "LS_AKV_Storage_Demo",
 					"type": "LinkedServiceReference"
 				},
 				"secretName": "storageaccount-adf-demo"
 			}
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/linkedservices"
+	}
 }

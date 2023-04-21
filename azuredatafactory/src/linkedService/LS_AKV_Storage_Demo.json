@@ -1,0 +1,11 @@
+{
+	"name": "LS_AKV_Storage_Demo",
+	"properties": {
+		"description": "Linked service with access to the azure key vault that holds the storage account connection string.",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://kv-demo-dev-eastus-001.vault.azure.net/"
+		}
+	}
+}

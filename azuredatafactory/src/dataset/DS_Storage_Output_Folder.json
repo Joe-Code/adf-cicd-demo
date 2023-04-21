@@ -1,8 +1,8 @@
 {
-	"name": "OutputDataset",
+	"name": "DS_Storage_Output_Folder",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureStorageLinkedService",
+			"referenceName": "LS_ABLB_Storage_Demo",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -14,6 +14,5 @@
 				"container": "adftutorial"
 			}
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

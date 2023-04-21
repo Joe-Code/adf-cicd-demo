@@ -1,9 +1,0 @@
-{
-	"name": "adf-cicd-jtf-dev",
-	"location": "eastus",
-	"identity": {
-		"type": "SystemAssigned",
-		"principalId": "fbf68fc5-7ac2-4adc-a023-00b8154d290d",
-		"tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
-	}
-}
