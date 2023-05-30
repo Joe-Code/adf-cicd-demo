@@ -1,0 +1,28 @@
+name: 'Azure Data Factory Deployment With Reusable Workflows'
+
+on:
+  workflow_dispatch:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+
+env:
+  workingDir: '/azuredatafactory/src'
+  workingDirARMParameters: '/azuredatafactory/cicd-parameters/'
+  dataFactoryNameDev: 'adf-demo-dev-eastus-001'
+  dataFactoryNameStaging: 'adf-demo-staging-eastus-001'
+  dataFactoryNameProd: 'adf-demo-prod-eastus-001'
+  resourceGroupName: 'rg-datafactory-demo'
+
+jobs:
+  build-adf-arm-templates:
+   uses: ./.github/workflows/adf-build.yaml
+   with:
+    adf-environment: development
+    adf-name: ${{ env.dataFactoryNameDev }}
+    resource-group-name: ${{ env.resourceGroupName }}
+    working-directory: ${{ env.workingDir }}
+    working-directory-arm-parameters: ${{ env.workingDirARMParameters }}
+   secrets:
+    AZURE_ADF_SUBSCRIPTIONID: ${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}

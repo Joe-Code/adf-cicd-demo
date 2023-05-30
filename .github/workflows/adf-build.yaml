@@ -1,0 +1,57 @@
+name: Reusable ADF Build workflow Example
+
+on:
+  workflow_call:
+    inputs:
+      adf-environment:
+        required: true
+        type: string
+      adf-name:
+        required: true
+        type: string
+      resource-group-name:
+        required: true
+        type: string
+      working-directory:
+        required: true
+        type: string
+      working-directory-arm-parameters:
+        required: true
+        type: string
+    secrets:
+      AZURE_ADF_SUBSCRIPTIONID:
+        required: true
+
+jobs:
+  reuseable-adf-build-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.1.0
+
+      - name: Setup node
+        uses: actions/setup-node@v3.5.0
+        with:
+          node-version: '18.x'
+    
+      - name: Install npm package
+        working-directory: '${{ inputs.working-directory }}'
+        run: npm install
+
+      - name: Validate
+        working-directory: '${{ inputs.working-directory }}'
+        run: npm run build validate '${{ inputs.working-directory }}' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}'
+        
+      - name: Generate ARM template
+        working-directory: '${{ inputs.working-directory }}'
+        run: npm run build export '${{ inputs.working-directory }}' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}' 'ARMTemplateOutput'
+
+      - name: Copying CICD ARM Template Parameter Files
+        run: cp -a '${{ inputs.working-directory-arm-parameters }}' '${{ inputs.working-directory }}/ARMTemplateOutput'
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: datafactory
+          path: '${{ inputs.working-directory }}/ARMTemplateOutput'
+          if-no-files-found: warn
