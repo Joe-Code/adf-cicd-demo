@@ -1,4 +1,4 @@
-name: 'Azure Data Factory Deployment With Reusable Workflows'
+name: 'Caller ADF Build and Deploy Example'
 
 on:
   workflow_dispatch:

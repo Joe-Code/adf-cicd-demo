@@ -1,4 +1,4 @@
-name: Reusable ADF Build workflow Example
+name: 'Called ADF Build Workflow'
 
 on:
   workflow_call:

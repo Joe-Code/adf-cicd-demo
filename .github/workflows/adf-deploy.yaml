@@ -1,4 +1,4 @@
-name: Reusable ADF Deploy Workflow Example
+name: 'Called ADF Deploy Workflow'
 
 on:
   workflow_call:
