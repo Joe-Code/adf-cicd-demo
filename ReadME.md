@@ -1,1 +1,1 @@
-This repo contains files from a sample Azure Data Factory and a YAML workflow that generates an ARM Template for deploying to multiple environments (dev, staging, prod).
+This repo contains files from a sample Azure Data Factory and a YAML workflow that generates an ARM Template for deploying to multiple environments (dev, staging, prod). There are additional workflow files that demonstrate how to reuse workflows for ths ADF example.
