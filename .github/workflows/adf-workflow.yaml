@@ -17,12 +17,16 @@ env:
 
 jobs:
   build-adf-arm-templates:
-   uses: joe-code/adfworkflows/.github/workflows/adf-build.yaml@v1
-   with:
-    adf-environment: development
-    adf-name: ${{ env.dataFactoryNameDev }}
-    resource-group-name: ${{ env.resourceGroupName }}
-    working-directory: ${{ env.workingDir }}
-    working-directory-arm-parameters: ${{ env.workingDirARMParameters }}
-   secrets:
-    AZURE_ADF_SUBSCRIPTIONID: ${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}
+    runs-on: ubuntu-latest
+    name: A job to say hello
+    steps:
+      - uses: actions/checkout@v3
+      - id: foo
+        uses: ./.github/actions/adf-build
+        with:
+          adf-environment: development
+          adf-name: ${{ env.dataFactoryNameDev }}
+          resource-group-name: ${{ env.resourceGroupName }}
+          working-directory: ${{ env.workingDir }}
+          working-directory-arm-parameters: ${{ env.workingDirARMParameters }}
+          subscription-id: ${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}
