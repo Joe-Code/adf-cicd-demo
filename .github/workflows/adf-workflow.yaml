@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     name: build-adf-arm-template
     steps:
+      - uses: actions/checkout@v3
+        
       - id: adf-build
         uses: ./.github/actions/adf-build
         with:
