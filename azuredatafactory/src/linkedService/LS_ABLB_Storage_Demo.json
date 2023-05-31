@@ -1,5 +1,6 @@
 {
 	"name": "LS_ABLB_Storage_Demo",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "Linked service with access to the storage account that will move files from the input folder to the output folder.",
 		"annotations": [],
