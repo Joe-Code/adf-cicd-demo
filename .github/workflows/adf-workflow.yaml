@@ -34,8 +34,9 @@ jobs:
   job-deploy-adf-arm-template:
     runs-on: ubuntu-latest
     name: deploy-adf-arm-template
+    needs: build-adf-arm-template
     steps:
       - id: adf-deployment
         uses: ./.github/actions/adf-deploy
         with: 
-          adf-environment: ${{ env.adfdevelopmentenvironment }}
+          resource-group-name: ${{ env.resourceGroupName }}

@@ -3,23 +3,23 @@ description: 'This action builds the ARM template for Azure Data Factory'
 
 inputs:
   adf-environment:
+    description: 'The environment to deploy to (development, staging, production)'
     required: true
-    type: string
   adf-name:
+    description: 'The name of the Azure Data Factory'
     required: true
-    type: string
   resource-group-name:
+    description: 'The name of the resource group'
     required: true
-    type: string
   working-directory:
+    description: 'The working directory of the Azure Data Factory'
     required: true
-    type: string
   working-directory-arm-parameters:
+    description: 'The working directory of the ARM template parameters'
     required: true
-    type: string
   subscription-id:
+    description: 'The subscription id'
     required: true
-    type: string
 
 runs:
   using: 'composite'
