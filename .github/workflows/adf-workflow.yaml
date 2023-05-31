@@ -8,8 +8,8 @@ on:
 #  pull_request:
 
 env:
-  workingDir: '/azuredatafactory/src'
-  workingDirARMParameters: '${{ github.workspace }}/azuredatafactory/cicd-parameters/'
+  workingDir: 'azuredatafactory/src/'
+  workingDirARMParameters: 'azuredatafactory/cicd-parameters/'
   dataFactoryNameDev: 'adf-demo-dev-eastus-001'
   dataFactoryNameStaging: 'adf-demo-staging-eastus-001'
   dataFactoryNameProd: 'adf-demo-prod-eastus-001'
