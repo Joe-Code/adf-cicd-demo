@@ -1,5 +1,8 @@
 on: workflow_dispatch
 
+env:
+  whotogreet: 'Mona the Octocat'
+  
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
@@ -9,6 +12,6 @@ jobs:
       - id: foo
         uses: ./.github/actions/action-a
         with:
-          who-to-greet: 'Mona the Octocat'
+          who-to-greet: ${{ env.whotogreet }}
       - run: echo random-number ${{ steps.foo.outputs.random-number }}
         shell: bash
