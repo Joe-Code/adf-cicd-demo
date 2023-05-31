@@ -33,18 +33,22 @@ runs:
         node-version: '18.x'
 
     - name: Install npm package
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: npm install
 
     - name: Validate
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: npm run build validate '${{ inputs.working-directory }}' '/subscriptions/${{ inputs.subscription-id }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}'
 
     - name: Generate ARM template
+      shell: bash
       working-directory: '${{ inputs.working-directory }}'
       run: npm run build export '${{ inputs.working-directory }}' '/subscriptions/${{ inputs.subscription-id }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}' 'ARMTemplateOutput'
 
     - name: Copying CICD ARM Template Parameter Files
+      shell: bash
       run: cp -a '${{ inputs.working-directory-arm-parameters }}' '${{ inputs.working-directory }}/ARMTemplateOutput'
 
     - name: Upload Artifacts
