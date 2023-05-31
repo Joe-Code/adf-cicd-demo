@@ -17,7 +17,7 @@ env:
 
 jobs:
   build-adf-arm-templates:
-   uses: ./.github/workflows/adf-build.yaml
+   uses: joe-code/.github/workflows/adfworkflows@v1
    with:
     adf-environment: development
     adf-name: ${{ env.dataFactoryNameDev }}
