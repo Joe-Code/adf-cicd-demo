@@ -1,5 +1,6 @@
 {
 	"name": "LS_AKV_Storage_Demo",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "Linked service with access to the azure key vault that holds the storage account connection string.",
 		"annotations": [],
