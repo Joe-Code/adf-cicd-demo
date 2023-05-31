@@ -17,11 +17,10 @@ env:
   resourceGroupName: 'rg-datafactory-demo'
 
 jobs:
-  job-build-adf-arm-templates:
+  job-build-adf-arm-template:
     runs-on: ubuntu-latest
-    name: build-adf-arm-templates
+    name: build-adf-arm-template
     steps:
-      - uses: actions/checkout@v3
       - id: adf-build
         uses: ./.github/actions/adf-build
         with:
@@ -31,3 +30,12 @@ jobs:
           working-directory: '${{ github.workspace }}/${{ env.workingDir }}'
           working-directory-arm-parameters: '${{ github.workspace }}/${{ env.workingDirARMParameters }}'
           subscription-id: ${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}
+          
+  job-deploy-adf-arm-template:
+    runs-on: ubuntu-latest
+    name: deploy-adf-arm-template
+    steps:
+      - id: adf-deployment
+        uses: ./.github/actions/adf-deploy
+        with: 
+          adf-environment: ${{ env.adfdevelopmentenvironment }}
