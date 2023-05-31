@@ -1,0 +1,19 @@
+name: 'Called ADF Deploy Action'
+description: 'This action deploys the ARM template for Azure Data Factory'
+
+inputs:
+  adf-environment:
+    required: true
+    type: string
+
+jobs:
+  reuseable-adf-deploy-job:
+    runs-on: ubuntu-latest
+    needs: build-adf-arm-templates
+    environment: ${{ inputs.adf-environment }}
+    steps:    
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
