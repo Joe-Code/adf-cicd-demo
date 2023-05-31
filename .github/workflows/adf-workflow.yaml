@@ -11,6 +11,7 @@ env:
   adfdevelopmentenvironment: 'development'
   workingDir: 'azuredatafactory/src/'
   workingDirARMParameters: 'azuredatafactory/cicd-parameters/'
+  arm-template-file: 'ARMTemplateForFactory.json'
   dataFactoryNameDev: 'adf-demo-dev-eastus-001'
   dataFactoryNameStaging: 'adf-demo-staging-eastus-001'
   dataFactoryNameProd: 'adf-demo-prod-eastus-001'
@@ -45,4 +46,7 @@ jobs:
         uses: ./.github/actions/adf-deploy
         with: 
           resource-group-name: ${{ env.resourceGroupName }}
+          data-factory-name: ${{ env.dataFactoryNameDev }}
+          arm-template-file: ${{ env.arm-template-file }}
+          arm-template-parameter-file: 'ARMTemplateParametersFactory-Development.json'
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}

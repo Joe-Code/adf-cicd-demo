@@ -5,6 +5,15 @@ inputs:
   resource-group-name:
     description: 'The name of the resource group'
     required: true
+  data-factory-name:
+    description: 'The name of the Azure Data Factory'
+    required: true
+  arm-template-file:
+    description: 'The name of the ARM template file'
+    required: true
+  arm-template-parameters-file:
+    description: 'The name of the ARM template parameters file'
+    required: true
   azure-credentials:
     description: 'The Azure credentials'
     required: true
@@ -26,10 +35,10 @@ runs:
     - name: Deploy resources
       uses: Azure/data-factory-deploy-action@v1.2.0
       with:
-        resourceGroupName: ${{ env.resourceGroupName }}
-        dataFactoryName: ${{ env.dataFactoryNameDev }}
-        armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
-        armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Development.json') }}
+        resourceGroupName: ${{ inputs.resource-group-name }}
+        dataFactoryName: ${{ inputs.data-factory-name }}
+        armTemplateFile: ${{ format('{0}/{1}', github.workspace, inputs.arm-template-file) }}
+        armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, inputs.arm-template-parameters-file) }}
 
     - name: Azure CLI script
       uses: azure/CLI@v1
