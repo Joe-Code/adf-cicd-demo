@@ -8,6 +8,7 @@ on:
 #  pull_request:
 
 env:
+  adfdevelopmentenvironment: 'development'
   workingDir: 'azuredatafactory/src/'
   workingDirARMParameters: 'azuredatafactory/cicd-parameters/'
   dataFactoryNameDev: 'adf-demo-dev-eastus-001'
@@ -16,15 +17,15 @@ env:
   resourceGroupName: 'rg-datafactory-demo'
 
 jobs:
-  build-adf-arm-templates:
+  job-build-adf-arm-templates:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: build-adf-arm-templates
     steps:
       - uses: actions/checkout@v3
-      - id: foo
+      - id: adf-build
         uses: ./.github/actions/adf-build
         with:
-          adf-environment: development
+          adf-environment: ${{ env.adfdevelopmentenvironment }}
           adf-name: ${{ env.dataFactoryNameDev }}
           resource-group-name: ${{ env.resourceGroupName }}
           working-directory: '${{ github.workspace }}/${{ env.workingDir }}'
