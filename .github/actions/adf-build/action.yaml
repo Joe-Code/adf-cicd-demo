@@ -17,6 +17,9 @@ inputs:
   working-directory-arm-parameters:
     required: true
     type: string
+  subscription-id:
+    required: true
+    type: string
 
 runs:
   using: 'composite'
@@ -35,11 +38,11 @@ runs:
 
     - name: Validate
       working-directory: '${{ inputs.working-directory }}'
-      run: npm run build validate '${{ inputs.working-directory }}' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}'
+      run: npm run build validate '${{ inputs.working-directory }}' '/subscriptions/${{ inputs.subscription-id }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}'
 
     - name: Generate ARM template
       working-directory: '${{ inputs.working-directory }}'
-      run: npm run build export '${{ inputs.working-directory }}' '/subscriptions/${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}' 'ARMTemplateOutput'
+      run: npm run build export '${{ inputs.working-directory }}' '/subscriptions/${{ inputs.subscription-id }}/resourceGroups/${{ inputs.resource-group-name }}/providers/Microsoft.DataFactory/factories/${{ inputs.adf-name }}' 'ARMTemplateOutput'
 
     - name: Copying CICD ARM Template Parameter Files
       run: cp -a '${{ inputs.working-directory-arm-parameters }}' '${{ inputs.working-directory }}/ARMTemplateOutput'
