@@ -5,6 +5,9 @@ inputs:
   resource-group-name:
     description: 'The name of the resource group'
     required: true
+  azure-credentials:
+    description: 'The Azure credentials'
+    required: true
 
 runs:
   using: 'composite'
@@ -12,5 +15,5 @@ runs:
     - name: Azure Login
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{ inputs.azure-credentials }}
         enable-AzPSSession: true

@@ -44,3 +44,4 @@ jobs:
         uses: ./.github/actions/adf-deploy
         with: 
           resource-group-name: ${{ env.resourceGroupName }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
