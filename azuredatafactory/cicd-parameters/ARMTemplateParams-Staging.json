@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "factoryName": {
-            "value": ""
+            "value": "adf-demo-staging-eastus-001"
         },
         "LS_AKV_Storage_Demo_properties_typeProperties_baseUrl": {
-            "value": ""
+            "value": "https://kv-demo-staging-eastus-001.vault.azure.net/"
         }
     }
 }

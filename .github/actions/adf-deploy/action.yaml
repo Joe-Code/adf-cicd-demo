@@ -17,3 +17,24 @@ runs:
       with:
         creds: ${{ inputs.azure-credentials }}
         enable-AzPSSession: true
+          
+    - name: Download a single artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: datafactory
+
+    - name: Deploy resources
+      uses: Azure/data-factory-deploy-action@v1.2.0
+      with:
+        resourceGroupName: ${{ env.resourceGroupName }}
+        dataFactoryName: ${{ env.dataFactoryNameDev }}
+        armTemplateFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateForFactory.json') }}
+        armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, 'ARMTemplateParametersFactory-Development.json') }}
+
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az logout
+          az cache purge
+          az account clear
