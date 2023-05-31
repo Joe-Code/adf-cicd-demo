@@ -37,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     name: deploy-adf-arm-template
     needs: job-build-adf-arm-template
+    environment: ${{ env.adfdevelopmentenvironment }}
     steps:
       - uses: actions/checkout@v3
         
