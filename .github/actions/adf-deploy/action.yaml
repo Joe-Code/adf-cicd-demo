@@ -38,7 +38,7 @@ runs:
         resourceGroupName: ${{ inputs.resource-group-name }}
         dataFactoryName: ${{ inputs.data-factory-name }}
         armTemplateFile: ${{ format('{0}/{1}', github.workspace, inputs.arm-template-file) }}
-        armTemplateParametersFile: ${{ format('{0}/{1}', github.workspace, inputs.arm-template-parameters-file) }}
+        armTemplateParametersFile: ${{ format('{0}/{1}', 'azuredatafactory/cicd-parameters', inputs.arm-template-parameters-file) }}
 
     - name: Azure CLI script
       uses: azure/CLI@v1
