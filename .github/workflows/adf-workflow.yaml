@@ -8,7 +8,7 @@ on:
 #  pull_request:
 
 env:
-  workingDir: '${{ github.workspace }}/azuredatafactory/src'
+  workingDir: '/azuredatafactory/src'
   workingDirARMParameters: '${{ github.workspace }}/azuredatafactory/cicd-parameters/'
   dataFactoryNameDev: 'adf-demo-dev-eastus-001'
   dataFactoryNameStaging: 'adf-demo-staging-eastus-001'
@@ -27,6 +27,6 @@ jobs:
           adf-environment: development
           adf-name: ${{ env.dataFactoryNameDev }}
           resource-group-name: ${{ env.resourceGroupName }}
-          working-directory: ${{ env.workingDir }}
-          working-directory-arm-parameters: ${{ env.workingDirARMParameters }}
+          working-directory: '${{ github.workspace }}/${{ env.workingDir }}'
+          working-directory-arm-parameters: '${{ github.workspace }}/${{ env.workingDirARMParameters }}'
           subscription-id: ${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}
