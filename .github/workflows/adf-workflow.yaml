@@ -48,5 +48,5 @@ jobs:
           resource-group-name: ${{ env.resourceGroupName }}
           data-factory-name: ${{ env.dataFactoryNameDev }}
           arm-template-file: ${{ env.arm-template-file }}
-          arm-template-parameters-file: 'ARMTemplateParametersFactory-Development.json'
+          arm-template-parameters-file: 'ARMTemplateParametersFactory-Dev.json'
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
