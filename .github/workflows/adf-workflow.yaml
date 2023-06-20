@@ -18,14 +18,14 @@ env:
   resourceGroupName: 'rg-datafactory-demo'
 
 jobs:
-  job-build-adf-arm-template:
+  job-publish-adf-arm-template:
     runs-on: ubuntu-latest
-    name: build-adf-arm-template
+    name: publish-adf-arm-template
     steps:
       - uses: actions/checkout@v3
         
-      - id: adf-build
-        uses: ./.github/actions/adf-build
+      - id: adf-publish
+        uses: ./.github/actions/adf-publish
         with:
           adf-environment: ${{ env.adfdevelopmentenvironment }}
           adf-name: ${{ env.dataFactoryNameDev }}
@@ -37,7 +37,7 @@ jobs:
   job-deploy-adf-arm-template:
     runs-on: ubuntu-latest
     name: deploy-adf-arm-template
-    needs: job-build-adf-arm-template
+    needs: job-publish-adf-arm-template
     environment: development
     steps:
       - uses: actions/checkout@v3
