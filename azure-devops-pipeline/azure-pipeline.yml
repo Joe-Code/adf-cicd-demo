@@ -10,19 +10,20 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: 'ADF Variable Group'
+  - name: subscriptionId
+    value: "Your subscription Id"
   - name: workingDir
     value: $(Build.Repository.LocalPath)/azuredatafactory/src
   - name: serviceConnection
     value: 'ADF Deployment Service Connection'
   - name: dataFactoryNameDev
-    value: ''
+    value: 'Your Development ADF'
   - name: dataFactoryNameStaging
-    value: ''
+    value: 'Your Staging ADF'
   - name: dataFactoryNameProd
-    value: ''
+    value: 'Your Production ADF'
   - name: resourceGroupName
-    value: ''
+    value: 'Your Resource Group'
 
 stages:
   - stage: build
@@ -30,12 +31,13 @@ stages:
     jobs:
       - job:
         steps:
-        # configuring node
+        # install node
         - task: NodeTool@0
           inputs:
             versionSpec: '14.x'
           displayName: 'Install Node.js'
 
+        # install npm packages
         - task: Npm@1
           inputs:
             command: 'install'
@@ -47,32 +49,35 @@ stages:
         - task: Npm@1
           inputs:
             command: 'custom'
-            customCommand: 'run build validate $(workingDir) /subscriptions/$(subscriptionId)/resourceGroups/$(resourceGroupName)/providers/Microsoft.DataFactory/factories/$(dataFactoryNameDev)'
+            customCommand: 'run publish validate $(workingDir) /subscriptions/$(subscriptionId)/resourceGroups/$(resourceGroupName)/providers/Microsoft.DataFactory/factories/$(dataFactoryNameDev)'
             workingDir: '$(workingDir)'
           displayName: 'Validate'
 
-        # generating ARM Templates from source code
+        # generating arm templates from source code
         - task: Npm@1
           inputs:
             command: 'custom'
-            customCommand: 'run build export $(workingDir) /subscriptions/$(subscriptionId)/resourceGroups/$(resourceGroupName)/providers/Microsoft.DataFactory/factories/$(dataFactoryNameDev) artifacts'
+            customCommand: 'run publish export $(workingDir) /subscriptions/$(subscriptionId)/resourceGroups/$(resourceGroupName)/providers/Microsoft.DataFactory/factories/$(dataFactoryNameDev) artifacts'
             workingDir: '$(workingDir)'
           displayName: 'Generate ARM template'
 
+        # adding arm template files to artifacts
         - task: CopyFiles@2
           inputs:
             SourceFolder: '$(workingDir)/artifacts'
             Contents: '**'
-            TargetFolder: '$(build.artifactstagingdirectory)/application' 
+            TargetFolder: '$(build.artifactstagingdirectory)/ARMTemplateOutput' 
           displayName: 'Copying application artifact'
 
+        # adding arm template parameter files to artifacts
         - task: CopyFiles@2
           inputs:
-            SourceFolder: '$(Build.Repository.LocalPath)/azuredatafactory/cicd-parameters'
+            SourceFolder: '$(Build.Repository.LocalPath)/azuredatafactory/cicd-pipeline'
             Contents: '*.json'
-            TargetFolder: '$(build.artifactstagingdirectory)/ARMTemplateParameter' 
+            TargetFolder: '$(build.artifactstagingdirectory)/ARMTemplateOutput' 
           displayName: 'Copying CICD ARM Template Parameter Files'
 
+        # publishing artifacts
         - task: PublishPipelineArtifact@1
           inputs:
             targetPath: '$(build.artifactstagingdirectory)'
@@ -108,8 +113,8 @@ stages:
                   resourceGroupName: '$(resourceGroupName)'
                   location: 'eastus'
                   templateLocation: 'Linked artifact'
-                  csmFile: '$(Pipeline.Workspace)/datafactory/application/ARMTemplateForFactory.json'
-                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateParameter/ARMTemplateParams-Dev.json'
+                  csmFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateOutput/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateOutput/ARMTemplateParams-Dev.json'
                   deploymentMode: 'Incremental'
 
   - stage: 'staging'
@@ -140,8 +145,8 @@ stages:
                   resourceGroupName: '$(resourceGroupName)'
                   location: 'eastus'
                   templateLocation: 'Linked artifact'
-                  csmFile: '$(Pipeline.Workspace)/datafactory/application/ARMTemplateForFactory.json'
-                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateParameter/ARMTemplateParams-Staging.json'
+                  csmFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateOutput/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateOutput/ARMTemplateParams-Staging.json'
                   deploymentMode: 'Incremental'
 
   - stage: prod
@@ -173,6 +178,6 @@ stages:
                   resourceGroupName: '$(resourceGroupName)'
                   location: 'eastus'
                   templateLocation: 'Linked artifact'
-                  csmFile: '$(Pipeline.Workspace)/datafactory/application/ARMTemplateForFactory.json'
-                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateParameter/ARMTemplateParams-Prod.json'
+                  csmFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateOutput/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Pipeline.Workspace)/datafactory/ARMTemplateOutput/ARMTemplateParams-Prod.json'
                   deploymentMode: 'Incremental'
