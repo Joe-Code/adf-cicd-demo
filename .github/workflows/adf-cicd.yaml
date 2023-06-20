@@ -16,7 +16,7 @@ env:
   resourceGroupName: 'rg-datafactory-demo'
 
 jobs:
-  build-adf-arm-templates:
+  publish-adf-arm-templates:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -51,7 +51,7 @@ jobs:
 
   deploy-adf-development:
     runs-on: ubuntu-latest
-    needs: build-adf-arm-templates
+    needs: publish-adf-arm-templates
     environment: development
     steps:    
       - name: Azure Login
