@@ -32,7 +32,6 @@ jobs:
           resource-group-name: ${{ env.resourceGroupName }}
           working-directory: '${{ github.workspace }}/${{ env.workingDir }}'
           working-directory-arm-parameters: '${{ github.workspace }}/${{ env.workingDirARMParameters }}'
-          subscription-id: ${{ secrets.AZURE_ADF_SUBSCRIPTIONID }}
           
   job-deploy-adf-arm-template:
     runs-on: ubuntu-latest
@@ -49,4 +48,3 @@ jobs:
           data-factory-name: ${{ env.dataFactoryNameDev }}
           arm-template-file: ${{ env.arm-template-file }}
           arm-template-parameters-file: 'ARMTemplateParams-Dev.json'
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
