@@ -14,6 +14,15 @@ inputs:
   arm-template-parameters-file:
     description: 'The name of the ARM template parameters file'
     required: true
+  azure-client-id:
+    description: 'The Azure client id'
+    required: true
+  azure-tenant-id:
+    description: 'The Azure tenant id'
+    required: true
+  azure-subscription-id:
+    description: 'The Azure subscription id'
+    required: true
 
 permissions:
   id-token: write
@@ -25,9 +34,9 @@ runs:
     - name: 'Azure Login'
       uses: azure/login@v1
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }} 
         enable-AzPSSession: true
           
     - name: 'Download a single artifact'

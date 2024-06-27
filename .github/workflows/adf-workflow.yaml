@@ -48,3 +48,6 @@ jobs:
           data-factory-name: ${{ env.dataFactoryNameDev }}
           arm-template-file: ${{ env.arm-template-file }}
           arm-template-parameters-file: 'ARMTemplateParams-Dev.json'
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
