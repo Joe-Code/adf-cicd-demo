@@ -1,5 +1,5 @@
-name: 'Called ADF Build Action'
-description: 'This action builds the ARM template for Azure Data Factory'
+name: 'Called ADF Publish Action'
+description: 'This action publishes the ARM template and other artifacts for Azure Data Factory'
 
 inputs:
   adf-environment:
