@@ -17,6 +17,10 @@ env:
   dataFactoryNameProd: 'adf-demo-prod-eastus-001'
   resourceGroupName: 'rg-datafactory-demo'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   job-publish-adf-arm-template:
     runs-on: ubuntu-latest
