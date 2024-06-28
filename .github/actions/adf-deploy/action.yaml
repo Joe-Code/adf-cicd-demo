@@ -48,7 +48,7 @@ runs:
       run: |
         ${{ github.workspace }}/PrePostDeploymentScript.ps1 `
           -armTemplate '${{ format('{0}/{1}', github.workspace, inputs.arm-template-file) }}' `
-          -armTemplateParameters '${{ format('{0}/{1}', github.workspace, inputs.arm-template-parameters-file) }}' `
+          -armTemplateParameters '${{ format('{0}/cicd-parameters/{1}', github.workspace, inputs.arm-template-parameters-file) }}' `
           -ResourceGroupName '${{ inputs.resource-group-name }}' `
           -DataFactoryName '${{ inputs.data-factory-name }}' `
           -predeployment $true `
@@ -73,7 +73,7 @@ runs:
       run: |
          ${{ github.workspace }}/PrePostDeploymentScript.ps1 `
           -armTemplate '${{ format('{0}/{1}', github.workspace, inputs.arm-template-file) }}' `
-          -armTemplateParameters '${{ format('{0}/{1}', github.workspace, inputs.arm-template-parameters-file) }}' `
+          -armTemplateParameters '${{ format('{0}/cicd-parameters/{1}', github.workspace, inputs.arm-template-parameters-file) }}' `
           -ResourceGroupName '${{ inputs.resource-group-name }}' `
           -DataFactoryName '${{ inputs.data-factory-name }}' `
           -predeployment $false `
