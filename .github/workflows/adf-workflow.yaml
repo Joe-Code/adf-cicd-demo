@@ -1,4 +1,4 @@
-name: 'Caller ADF Build and Deploy Example'
+name: 'ADF Workflow with Build and Deploy Example'
 
 on:
   workflow_dispatch:
