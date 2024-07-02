@@ -58,9 +58,9 @@ runs:
     - name: Create deployment stack
       run: |
         az stack group create --name "Deploy ARM Template in Deployment Stack" \
-          --resource-group' ${{ inputs.resource-group-name }}'' \
-          --template-file '${{ format('{0}/{1}', github.workspace, inputs.arm-template-file) }}'' \
-          --parameters '${{ format('{0}/cicd-parameters/{1}', github.workspace, inputs.arm-template-parameters-file) }}'' \
+          --resource-group '${{ inputs.resource-group-name }}' \
+          --template-file '${{ format('{0}/{1}', github.workspace, inputs.arm-template-file) }}' \
+          --parameters '${{ format('{0}/cicd-parameters/{1}', github.workspace, inputs.arm-template-parameters-file) }}' \
           --action-on-unmanage deleteAll \
           --deny-settings-mode denyDelete \
           --yes
