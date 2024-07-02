@@ -1,0 +1,70 @@
+{
+	"name": "PL_Delete_Me",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Files",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Hurry Up and Wait",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_Storage_Input_Folder",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_Storage_Output_Folder",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Hurry Up and Wait",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-06-28T00:55:31Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
